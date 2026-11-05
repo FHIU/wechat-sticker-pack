@@ -2,6 +2,12 @@
 
 ## [1.2.3] - 2026-11-05
 
+### 新增
+- **`package.sh`**：一条命令打包成可安装 zip（`./package.sh` → `dist/wechat-sticker-pack.zip`），并在产出前自检层级、垃圾文件、必需文件。
+
+### 修复
+- **打包会把 `.git/` 塞进 zip**：官方 `package_skill.py` 递归压整个目录且不看 `.gitignore`，在仓库根目录直接运行产出的包为 209KB，包含全部提交历史。改为先复制运行必需文件到临时暂存目录再打包，产物 36KB / 12 文件。README 与 `CLAUDE.md` 同步写明「打包只走 `package.sh`」。
+
 ### 调整
 - **删除 `references/prompt-example.txt`**。这份 101 行的示例与《提示词填空表》内容大量重复（A 区、C 区、自检三问都是同一套说法），真正多出来的信息只有「B 区一行写到多细」。该信息已浓缩为 `prompt-form.md` 中的**两行填好的样板**，对照价值保留，少一个文件和一处双份维护。
 - `SKILL.md` 的 `author` 由 `酱小鱼工作室` 改为 `夜猫子`，与 `LICENSE` 版权方一致。

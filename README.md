@@ -122,6 +122,17 @@ python3 scripts/validate.py 成品 --gif-frames 5
 
 每个脚本都是独立 CLI，`--help` 有完整参数说明，可以嵌进任何流水线。
 
+## 自己打包（维护者用）
+
+改完技能要把 zip 发给别人时：
+
+```bash
+./package.sh              # → dist/wechat-sticker-pack.zip
+./package.sh /tmp/out     # → 指定输出目录
+```
+
+⚠️ **不要直接跑 `package_skill.py`。** 它递归压整个目录、不看 `.gitignore`，在仓库根目录执行会把 `.git/` 一起打进去——实测 209KB，而且等于把全部提交历史发给了每个下载者。`package.sh` 的做法是：先把运行必需文件复制到一个临时暂存目录，再在那里打包，最后自检三件事——根层必须是 `wechat-sticker-pack/SKILL.md`、包内不得出现 `.git`／`__pycache__`／`.DS_Store`／嵌套 zip、`SKILL.md`／`prompt-form.md`／`validate.py` 必须都在。任一不满足就报错退出，不产出包。
+
 ## 目录
 
 ```
@@ -140,7 +151,8 @@ wechat-sticker-pack/
 │   ├── launch-info.md    上架文案模板与反例
 │   └── brand-logo.md     车标式徽标的设计口径与 SVG 写法
 ├── CHANGELOG.md
-└── requirements.txt
+├── requirements.txt
+└── package.sh            打包成可安装 zip（产物进 dist/，不随包分发自己）
 ```
 
 ## 验证过的关键指标
