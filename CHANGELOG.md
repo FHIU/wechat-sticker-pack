@@ -1,5 +1,12 @@
 # 变更记录
 
+## [1.2.1] - 2026-11-05
+
+### 修复
+- **安装包层级错误**：上一版 zip 是把仓库文件平铺在根目录打的，解压后 `SKILL.md` 裸露在根层，WorkBuddy / Claude Code 这类按目录识别技能的宿主装不上。改用官方打包脚本重打，包内为 `wechat-sticker-pack/SKILL.md`，已验证可解压即用。
+- 安装包精简为**只含运行必需**（SKILL.md、scripts/、references/、CHANGELOG.md），README / AGENTS / INSTALL / adapters 属于仓库门面，不随技能包分发。
+- `INSTALL.md` 补 WorkBuddy 的两种装法与「装完怎么验证生效」「zip 层级必须带一层同名目录」两条排查。
+
 ## [1.2.0] - 2026-11-05
 
 ### 定位修正（本次最重要的改动）

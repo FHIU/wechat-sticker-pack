@@ -35,11 +35,28 @@ Codex 自动读工作区根目录的 `AGENTS.md`。它已包含六关卡、四�
 
 ## 三、WorkBuddy
 
+**方式 A：装安装包（推荐给非技术使用者）**
+
+在 WorkBuddy 里直接说「安装技能」，把 `wechat-sticker-pack.zip` 交给它；或手工解压到技能目录：
+
+```bash
+unzip wechat-sticker-pack.zip -d ~/.workbuddy/skills/
+# 结果必须是 ~/.workbuddy/skills/wechat-sticker-pack/SKILL.md
+```
+
+**方式 B：拷目录**
+
 ```bash
 cp -R wechat-sticker-pack ~/.workbuddy/skills/
 ```
 
-用户级技能，全项目可用。图像生成用内置能力，无需额外配置。
+用户级技能，全项目可用（想让某个项目独占，就放到该项目的 `.workbuddy/skills/`）。
+图像生成用内置能力，无需额外配置。
+
+**装完怎么确认生效**：新开一个会话，说「做一套表情包」。如果技能生效，它会先问你上传参数，而不是直接开始画画；没反应就是没装上，先查目录里有没有 `SKILL.md`。
+
+**压缩包层级**：zip 内必须有一层同名目录（`wechat-sticker-pack/SKILL.md`），
+把文件平铺在压缩包根目录是装不上的——这是最常见的失败原因。
 
 ## 四、自建 / 私有 Agent
 
