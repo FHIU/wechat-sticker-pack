@@ -31,7 +31,7 @@ Claude 没有内置生图，S3 与 S9 需要显式指定生图工具（如 MCP �
 cp -R wechat-sticker-pack <你的工作区>/
 ```
 
-Codex 自动读工作区根目录的 `AGENTS.md`。它已包含五关卡、三条产出规则、命令与规格摘要，不必再让它读 `SKILL.md`（深层细节让它按索引去 `references/` 里翻）。
+Codex 自动读工作区根目录的 `AGENTS.md`。它已包含六关卡、四条产出规则、命令与规格摘要，不必再让它读 `SKILL.md`（深层细节让它按索引去 `references/` 里翻）。
 
 ## 三、WorkBuddy
 
@@ -46,7 +46,7 @@ cp -R wechat-sticker-pack ~/.workbuddy/skills/
 见 [`adapters/custom-agent.md`](adapters/custom-agent.md)。核心是三处替换：
 
 1. **生图调用** — S3 / S9 的「生成一张图」换成你后端的图像模型 API
-2. **确认机制** — 五关卡的「停住问」换成你前端的交互暂停或表单
+2. **确认机制** — 六关卡的「停住问」换成你前端的交互暂停或表单
 3. **执行通道** — 五个脚本的调用换成你沙箱里的 shell 工具
 
 ## 五、纯对话平台（DeepSeek / 豆包 / 文心等）
