@@ -6,6 +6,15 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Python](https://img.shields.io/badge/Python-3.9%2B-3776AB.svg)](requirements.txt)
 
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/preview-dark.png">
+    <img src="docs/preview-light.png" alt="一套 16 张成品表情包中的 4 张：就这、反弹、招呼、再会，均为 240×240 透明 GIF 的静帧" width="100%">
+  </picture>
+  <br>
+  <sub>实拍成品 · 16 张里取 4 张（就这 / 反弹 / 招呼 / 再会），240×240 透明 GIF 静帧</sub>
+</p>
+
 ---
 
 ## 安装（30 秒）
@@ -150,6 +159,7 @@ wechat-sticker-pack/
 │   ├── cutout-spec.md    抠图四步的公式、阈值、验收指标、失败排查
 │   ├── launch-info.md    上架文案模板与反例
 │   └── brand-logo.md     车标式徽标的设计口径与 SVG 写法
+├── docs/                 README 顶部的成品预览图（亮/暗两版）
 ├── CHANGELOG.md
 ├── requirements.txt
 └── package.sh            打包成可安装 zip（产物进 dist/，不随包分发自己）
