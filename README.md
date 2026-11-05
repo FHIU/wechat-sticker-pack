@@ -23,7 +23,7 @@
 
 ```bash
 # 方式一：命令行
-git clone https://github.com/<你的用户名>/wechat-sticker-pack.git
+git clone https://github.com/FHIU/wechat-sticker-pack.git
 cp -R wechat-sticker-pack ~/.workbuddy/skills/      # Claude Code 换成 ~/.claude/skills/
 ```
 
