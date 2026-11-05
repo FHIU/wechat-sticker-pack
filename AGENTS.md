@@ -64,8 +64,7 @@ python3 scripts/validate.py 成品 --gif-frames 5
 | 抠图四步的公式与阈值、失败排查 | `references/cutout-spec.md` |
 | 上架文案模板与反例 | `references/launch-info.md` |
 | 徽标设计口径与 SVG 写法 | `references/brand-logo.md` |
-| 空白的提示词填表（S2 交付物） | `references/prompt-form.md` |
-| 填好的实例（虚构柴犬，8 行，只对照结构） | `references/prompt-example.txt` |
+| 提示词填表 + 填写标准 + 两行样板（S2 交付物） | `references/prompt-form.md` |
 
 ## 收尾必须做的事
 

@@ -1,8 +1,8 @@
 ---
 name: wechat-sticker-pack
 description: 微信表情包整套生成与上架流程骨架。当用户要求「做一套表情包」「生成 8/16/32 张表情」「先出母图/主模板图」「出总览排版图」「统一文字排版」「把白底抠成透明」「生成上架素材（横幅/封面/图标）」「写表情专辑的名称介绍含义词」时使用。技能只提供流程、规范与脚本，形象与逐张提示词由使用者填《提示词填空表》提供，技能不得代写内容；六道确认关卡（上传参数 → 平台附加信息 → 提示词填表 → 母图验证 → 名称逐张征询 → 版型确认）未通过前不批量出图。
-version: 1.2.2
-author: 酱小鱼工作室
+version: 1.2.3
+author: 夜猫子
 license: MIT
 agent_created: true
 ---
@@ -174,6 +174,5 @@ python3 scripts/validate.py 成品目录
 | `references/platform-specs.md` | 上传参数、附加信息选项、素材规格、字数上限、平台实测坑 |
 | `references/cutout-spec.md` | 抠透明四步的公式、阈值、验收指标与失败排查 |
 | `references/launch-info.md` | 上架文案模板、字数校验、成套实例 |
-| `references/prompt-form.md` | **《提示词填空表》空白表 + 填写标准 + 反例（S2 交付物）** |
-| `references/prompt-example.txt` | 一份填好的实例（虚构柴犬，8 行），只对照结构，内容不可照抄 |
+| `references/prompt-form.md` | **《提示词填空表》空白表 + 填写标准 + 反例 + 两行样板（S2 交付物）** |
 | `references/brand-logo.md` | 车标式单标记的设计口径、脚本用法、SVG 写法、放置位置 |
