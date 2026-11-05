@@ -9,10 +9,10 @@
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="docs/preview-dark.png">
-    <img src="docs/preview-light.png" alt="一套 16 张成品表情包中的 4 张：就这、反弹、招呼、再会，均为 240×240 透明 GIF 的静帧" width="100%">
+    <img src="docs/preview-light.png" alt="一套 16 张成品表情包中的 3 张：就这、反弹、招呼，均为 240×240 透明 GIF 的静帧" width="100%">
   </picture>
   <br>
-  <sub>实拍成品 · 16 张里取 4 张（就这 / 反弹 / 招呼 / 再会），240×240 透明 GIF 静帧</sub>
+  <sub>实拍成品 · 16 张里取 3 张（就这 / 反弹 / 招呼），240×240 透明 GIF 静帧</sub>
 </p>
 
 ---

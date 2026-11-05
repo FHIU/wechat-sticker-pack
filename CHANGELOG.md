@@ -4,7 +4,7 @@
 
 ### 新增
 - **`package.sh`**：一条命令打包成可安装 zip（`./package.sh` → `dist/wechat-sticker-pack.zip`），并在产出前自检层级、垃圾文件、必需文件。
-- **README 顶部成品预览图**：`docs/preview-light.png` / `preview-dark.png`，用 `<picture>` 按 `prefers-color-scheme` 自动切换，深色主题下不会出现白色底块。取 4 张姿势差异最大的成品（就这 / 反弹 / 招呼 / 再会）。
+- **README 顶部成品预览图**：`docs/preview-light.png` / `preview-dark.png`，用 `<picture>` 按 `prefers-color-scheme` 自动切换，深色主题下不会出现白色底块。取 3 张姿势差异最大的成品（就这 / 反弹 / 招呼）。
 
 ### 修复
 - **打包会把 `.git/` 塞进 zip**：官方 `package_skill.py` 递归压整个目录且不看 `.gitignore`，在仓库根目录直接运行产出的包为 209KB，包含全部提交历史。改为先复制运行必需文件到临时暂存目录再打包，产物 36KB / 12 文件。README 与 `CLAUDE.md` 同步写明「打包只走 `package.sh`」。
