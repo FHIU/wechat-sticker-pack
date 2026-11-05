@@ -8,6 +8,36 @@
 
 ---
 
+## 安装（30 秒）
+
+**给 WorkBuddy / Claude Code 用**——技能就是「一个含 `SKILL.md` 的文件夹」：
+
+```bash
+# 方式一：命令行
+git clone https://github.com/<你的用户名>/wechat-sticker-pack.git
+cp -R wechat-sticker-pack ~/.workbuddy/skills/      # Claude Code 换成 ~/.claude/skills/
+```
+
+**方式二：不装 git**——到 [Releases](../../releases/latest) 下载 `wechat-sticker-pack.zip`，解压到同一目录：
+
+```
+~/.workbuddy/skills/wechat-sticker-pack/SKILL.md   ← 必须是这个层级
+```
+
+装完新开一个会话，说「做一套表情包」。**技能生效的样子是先问你上传参数**，不是直接开始画；没反应就是没装上，先看路径对不对。
+
+**只想用脚本，不装技能**：
+
+```bash
+pip install -r requirements.txt          # Pillow + numpy + opencv-headless
+python3 scripts/cutout.py 原图.png 角色.png --height 640 --pad 30
+```
+
+**用 Codex 等终端 Agent**：读 [`AGENTS.md`](AGENTS.md)。
+**用纯对话平台（DeepSeek / 豆包）**：把 [`adapters/chat-only.md`](adapters/chat-only.md) 整个粘进去。
+
+---
+
 ## 分工：技能给框架，内容你来填
 
 | 由你提供（填《提示词填空表》） | 由技能提供 |
