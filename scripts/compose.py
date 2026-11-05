@@ -17,23 +17,47 @@ from PIL import Image, ImageDraw, ImageFont
 
 CANVAS = 240
 FONT_CANDIDATES = [
-    "/System/Library/Fonts/Hiragino Sans GB.ttc",
-    "/System/Library/Fonts/PingFang.ttc",
-    "/usr/share/fonts/truetype/noto/NotoSansCJK-Bold.ttc",
+    # macOS
+    ("/System/Library/Fonts/Hiragino Sans GB.ttc", (2, 0)),
+    ("/System/Library/Fonts/PingFang.ttc", (2, 0)),
+    ("/System/Library/Fonts/STHeiti Medium.ttc", (1, 0)),
+    # Windows
+    ("C:/Windows/Fonts/msyhbd.ttc", (0, 0)),
+    ("C:/Windows/Fonts/msyh.ttc", (0, 0)),
+    ("C:/Windows/Fonts/simhei.ttf", (0, 0)),
+    # Linux
+    ("/usr/share/fonts/opentype/noto/NotoSansCJK-Bold.ttc", (2, 0)),
+    ("/usr/share/fonts/truetype/noto/NotoSansCJK-Bold.ttc", (2, 0)),
+    ("/usr/share/fonts/truetype/wqy/wqy-zenhei.ttc", (0, 0)),
 ]
 TEXT_FILL = (244, 247, 250, 255)
 STROKE_FILL = (16, 24, 32, 255)
+_FONT_CACHE = {}
 
 
-def load_font(size: int = 25) -> ImageFont.FreeTypeFont:
-    for p in FONT_CANDIDATES:
-        if os.path.exists(p):
-            for idx in (2, 0, 1):  # Hiragino：index 2 = W6
-                try:
-                    return ImageFont.truetype(p, size, index=idx)
-                except Exception:
-                    continue
-    return ImageFont.load_default()
+def load_font(size: int = 25, font_path=None) -> ImageFont.FreeTypeFont:
+    """按平台探测中文字体；找不到就报错，不静默画方框。"""
+    key = (size, font_path)
+    if key in _FONT_CACHE:
+        return _FONT_CACHE[key]
+    cands = ([(font_path, (0, 0))] if font_path else []) + FONT_CANDIDATES
+    for path, (bold_idx, reg_idx) in cands:
+        if not path or not os.path.exists(path):
+            continue
+        for idx in (bold_idx, reg_idx):
+            try:
+                f = ImageFont.truetype(path, size, index=idx)
+                _FONT_CACHE[key] = f
+                return f
+            except Exception:
+                continue
+    raise SystemExit(
+        "找不到可用的中文字体，无法写文字。\n"
+        "  macOS   系统自带 Hiragino Sans GB，一般不需要处理\n"
+        "  Windows 系统自带微软雅黑，一般不需要处理\n"
+        "  Linux   执行：sudo apt install fonts-noto-cjk\n"
+        "  或手动指定  --font /路径/字体.ttc"
+    )
 
 
 def place(char: Image.Image, subject_height: int = 208) -> Image.Image:
@@ -51,9 +75,9 @@ def place(char: Image.Image, subject_height: int = 208) -> Image.Image:
     return canvas
 
 
-def label(text: str, size: int = 25) -> Image.Image:
+def label(text: str, size: int = 25, font_path=None) -> Image.Image:
     layer = Image.new("RGBA", (CANVAS, CANVAS), (0, 0, 0, 0))
-    ImageDraw.Draw(layer).text((211, 47), text, font=load_font(size),
+    ImageDraw.Draw(layer).text((211, 47), text, font=load_font(size, font_path),
                                fill=TEXT_FILL, anchor="mm",
                                stroke_width=2, stroke_fill=STROKE_FILL)
     return layer
@@ -76,10 +100,10 @@ def dedupe(arr: np.ndarray, core_thr: int = 248, alpha_thr: int = 60) -> np.ndar
 
 
 def build(char_path: str, out_prefix: str, text: str, subject_height: int = 208,
-          make_gif: bool = True, font_size: int = 25) -> dict:
+          make_gif: bool = True, font_size: int = 25, font_path=None) -> dict:
     char = Image.open(char_path).convert("RGBA")
     canvas = place(char, subject_height)
-    tl = label(text, font_size)
+    tl = label(text, font_size, font_path)
     static = Image.alpha_composite(canvas, tl)
 
     ca = np.array(static)
@@ -93,7 +117,7 @@ def build(char_path: str, out_prefix: str, text: str, subject_height: int = 208,
     info = {"png": png, "intrusion": intrusion}
     if make_gif:
         frames = []
-        for o in (0, -1, -2, -2, -1, 0):
+        for o in (0, -1, -2, -1, 0):  # 5 帧，上下浮动 0/1/2/1/0（口径固定，勿改）
             cl = Image.new("RGBA", (CANVAS, CANVAS), (0, 0, 0, 0))
             cl.alpha_composite(canvas, (0, o))
             frames.append(Image.alpha_composite(cl, tl))
@@ -121,11 +145,12 @@ def main() -> None:
     ap.add_argument("--subject-height", type=int, default=208)
     ap.add_argument("--font-size", type=int, default=25)
     ap.add_argument("--no-gif", action="store_true")
+    ap.add_argument("--font", default=None, help="中文字体路径（默认按 macOS/Windows/Linux 顺序自动探测）")
     a = ap.parse_args()
     d = os.path.dirname(a.out)
     if d:
         os.makedirs(d, exist_ok=True)
-    info = build(a.char, a.out, a.text, a.subject_height, not a.no_gif, a.font_size)
+    info = build(a.char, a.out, a.text, a.subject_height, not a.no_gif, a.font_size, a.font)
     print("文字区人物侵入:", info["intrusion"], "像素")
     print("输出:", info["png"], info.get("gif", ""))
 

@@ -104,6 +104,35 @@ python3 -c "import PIL, numpy, cv2; print('ok')"
 
 ---
 
+## 中文字体
+
+`compose.py`（叠图上文字）和 `assets.py`（横幅标题）需要一款中文字体。脚本会按顺序自动找：
+
+| 平台 | 会自动找到的 |
+|---|---|
+| macOS | Hiragino Sans GB（系统自带） |
+| Windows | 微软雅黑 `C:/Windows/Fonts/msyh.ttc`、黑体 `simhei.ttf`（系统自带） |
+| Linux | Noto Sans CJK、文泉驿（需安装：`sudo apt install fonts-noto-cjk`） |
+
+一个都找不到时脚本会直接报错退出，并提示装字体的命令——**不会静默画出一堆方框**。
+自定义字体：
+
+```bash
+python3 scripts/compose.py 角色.png out/01 --text 就这 --font "/路径/字体.ttc"
+python3 scripts/assets.py 角色.png 输出目录 --title 标题 --font "/路径/字体.ttc"
+```
+
+## 常见报错
+
+| 现象 | 原因 | 处理 |
+|---|---|---|
+| `ModuleNotFoundError: cv2` | 没装 opencv | `pip install opencv-python-headless` |
+| 图上的中文变成方框 | 没找到中文字体 | 装 Noto CJK，或 `--font` 指定 |
+| 装完技能、说「做套表情包」没反应 | 层级错了，`SKILL.md` 不在技能文件夹根部 | 检查 `…/skills/wechat-sticker-pack/SKILL.md` 是否存在 |
+| `No such file or directory` 但文件明明在 | 路径含空格或中文没加引号 | 整段路径用双引号包住 |
+| GIF 在微信里透明失效、边缘发黑 | 合成时没用「调色板索引 255 = 透明 + disposal=2」 | 用 `compose.py`，不要拿别的工具二次合成 |
+| 素材图上传被判「白底不合格」 | 横幅/封面用了纯白或透明底 | 横幅用深底（脚本默认），封面图标用透明底 |
+
 ## 发布到 GitHub
 
 首次发布：

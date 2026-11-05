@@ -6,18 +6,58 @@
     python3 assets.py 角色透明图.png 输出目录 [--brand-color 12,17,23]
 
 说明（平台硬约束）：
-    横幅 —— 不得含文字、logo、二维码；非白底、非透明底
-    封面 —— 必须是完整角色，不能只有头部；无文字、无边框
-    图标 —— 只用头部正面，特征齐全，无身体手臂
+    横幅 —— 可以有标题文字与品牌 logo；禁二维码、联系方式、第三方水印；非白底、非透明底
+    封面 —— 必须是完整角色，不能只有头部；无文字、无边框、透明底
+    图标 —— 只用头部正面，特征齐全，无身体手臂、透明底
 """
 import argparse
 import os
 
 import numpy as np
-
-CN_FONT = "/System/Library/Fonts/Hiragino Sans GB.ttc"
-W6, W3 = 2, 0
 from PIL import Image, ImageDraw, ImageFont
+
+# 中文字体：按平台依次探测（macOS / Windows / Linux 都覆盖）。
+# 一个都找不到时明确报错并给出装字体的命令，而不是静默画出一堆方框。
+FONT_CANDIDATES = [
+    # macOS
+    ("/System/Library/Fonts/Hiragino Sans GB.ttc", (2, 0)),
+    ("/System/Library/Fonts/PingFang.ttc", (2, 0)),
+    ("/System/Library/Fonts/STHeiti Medium.ttc", (1, 0)),
+    # Windows
+    ("C:/Windows/Fonts/msyhbd.ttc", (0, 0)),
+    ("C:/Windows/Fonts/msyh.ttc", (0, 0)),
+    ("C:/Windows/Fonts/simhei.ttf", (0, 0)),
+    # Linux
+    ("/usr/share/fonts/opentype/noto/NotoSansCJK-Bold.ttc", (2, 0)),
+    ("/usr/share/fonts/truetype/noto/NotoSansCJK-Bold.ttc", (2, 0)),
+    ("/usr/share/fonts/truetype/wqy/wqy-zenhei.ttc", (0, 0)),
+]
+_FONT_CACHE = {}
+
+
+def resolve_font(size, bold=True, font_path=None):
+    """返回可渲染中文的字体；bold 走粗，其余走常规。"""
+    key = (size, bold, font_path)
+    if key in _FONT_CACHE:
+        return _FONT_CACHE[key]
+    cands = ([(font_path, (0, 0))] if font_path else []) + FONT_CANDIDATES
+    for path, (bold_idx, reg_idx) in cands:
+        if not path or not os.path.exists(path):
+            continue
+        for idx in ((bold_idx, reg_idx) if bold else (reg_idx, bold_idx)):
+            try:
+                f = ImageFont.truetype(path, size, index=idx)
+                _FONT_CACHE[key] = f
+                return f
+            except Exception:
+                continue
+    raise SystemExit(
+        "找不到可用的中文字体，无法写文字。\n"
+        "  macOS   系统自带 Hiragino Sans GB，一般不需要处理\n"
+        "  Windows 系统自带微软雅黑，一般不需要处理\n"
+        "  Linux   执行：sudo apt install fonts-noto-cjk\n"
+        "  或手动指定  --font /路径/字体.ttc"
+    )
 
 
 def vgrad(size, c1, c2):
@@ -40,7 +80,7 @@ def radial(size, center, radius, color, strength=1.0):
     return Image.fromarray(layer, "RGBA")
 
 
-def banner(char, base, top, out_dir, logo=None, title="", sub="", tag=""):
+def banner(char, base, top, out_dir, logo=None, title="", sub="", tag="", font_path=None):
     """横幅 750×400。可含标题文字与品牌 logo；禁二维码/联系方式。"""
     W, H = 750, 400
     cx = W // 2
@@ -70,9 +110,9 @@ def banner(char, base, top, out_dir, logo=None, title="", sub="", tag=""):
         bg.alpha_composite(lg, (44, 30))
 
     if title:
-        f_title = ImageFont.truetype(CN_FONT, 74, index=W6)
-        f_sub = ImageFont.truetype(CN_FONT, 23, index=W3)
-        f_tag = ImageFont.truetype(CN_FONT, 15, index=W3)
+        f_title = resolve_font(74, True, font_path)
+        f_sub = resolve_font(23, False, font_path)
+        f_tag = resolve_font(15, False, font_path)
         d.text((46, 210), title, font=f_title, fill=(244, 247, 250, 255), anchor="ls")
         if sub:
             d.text((47, 264), sub, font=f_sub, fill=(176, 190, 205, 255), anchor="ls")
@@ -130,6 +170,7 @@ def main():
     ap.add_argument("--title", default="", help="横幅主标题（留空则人物居中、无文字）")
     ap.add_argument("--subtitle", default="")
     ap.add_argument("--tag", default="")
+    ap.add_argument("--font", default=None, help="中文字体路径（默认按 macOS/Windows/Linux 顺序自动探测）")
     a = ap.parse_args()
     os.makedirs(a.out_dir, exist_ok=True)
     base = tuple(int(x) for x in a.base_color.split(","))
@@ -137,7 +178,7 @@ def main():
     char = Image.open(a.char).convert("RGBA")
 
     logo = Image.open(a.logo).convert("RGBA") if a.logo else None
-    banner(char, base, top, a.out_dir, logo, a.title, a.subtitle, a.tag)
+    banner(char, base, top, a.out_dir, logo, a.title, a.subtitle, a.tag, a.font)
     cover(char, base, top, a.out_dir)
     icon(char, a.out_dir)
     role_card(char, a.out_dir)

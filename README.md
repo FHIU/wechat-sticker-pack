@@ -135,7 +135,7 @@ wechat-sticker-pack/
 ├── scripts/              5 个可执行 CLI
 ├── references/
 │   ├── prompt-form.md    《提示词填空表》空白表 + 填写标准 + 反例 ← S2 交给你填的
-│   ├── prompt-example.txt 一份填好的实例（16 张），只对照结构，内容别照抄
+│   ├── prompt-example.txt 一份填好的实例（虚构柴犬，8 行），只对照结构，内容别照抄
 │   ├── platform-specs.md 平台参数、选项全集、素材规格、字数上限、实测坑
 │   ├── cutout-spec.md    抠图四步的公式、阈值、验收指标、失败排查
 │   ├── launch-info.md    上架文案模板与反例
